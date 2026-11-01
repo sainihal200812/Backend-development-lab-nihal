@@ -1,0 +1,6 @@
+# Git ignore rules for Backend Development Labs Course Repository
+node_modules/
+.env
+*.log
+.DS_Store
+Thumbs.db
