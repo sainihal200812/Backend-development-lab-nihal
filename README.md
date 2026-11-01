@@ -18,7 +18,7 @@ Each lab folder is self-contained with its own source code, dependencies manifes
 | Lab Folder | Title | Module / Topic | Status |
 |---|---|---|---|
 | [`lab-01/`](./lab-01/) | **Node.js and Express server** | Node.js & Express.js fundamentals, routing, status codes | Completed |
-| `lab-02/` | *Routing and Middleware* | HTTP methods, middleware chain, request logging | Upcoming |
+| [`lab-02/`](./lab-02/) | **SQLite database and CRUD routes** | SQLite and relational database operations | Completed |
 | `lab-03/` | *RESTful APIs & Controllers* | REST principles, URL params, query strings | Upcoming |
 | `lab-04/` | *Data Validation & Error Handling* | Schema validation, central error handling | Upcoming |
 | `lab-05/` | *Database Connectivity* | Database integration, ORM/ODM models | Upcoming |
