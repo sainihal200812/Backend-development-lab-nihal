@@ -1,0 +1,30 @@
+{
+  "name": "lab-02",
+  "version": "1.0.0",
+  "description": "Lab 2: SQLite database and CRUD routes - Backend Development Fundamentals",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "init-db": "node setup-db.js"
+  },
+  "keywords": [
+    "express",
+    "sqlite",
+    "sqlite3",
+    "crud",
+    "rest-api",
+    "lab-02"
+  ],
+  "author": "Kollampally Sai Nihal",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
