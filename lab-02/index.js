@@ -8,6 +8,7 @@
  */
 
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 const { open } = require('sqlite');
 const sqlite3 = require('sqlite3');
@@ -17,9 +18,6 @@ const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
-const dbPath = path.join(__dirname, 'books.db');
-
-let db = null;
 
 // Middleware: Request logger to log method, URL, status code, and latency
 app.use((req, res, next) => {
@@ -31,38 +29,94 @@ app.use((req, res, next) => {
   next();
 });
 
+// Helper: Determine database path
+// In serverless environments (Vercel / AWS Lambda), the deployment directory is read-only.
+// We copy the database to /tmp so SQLite can read, write, and create lock/journal files.
+const getDatabasePath = () => {
+  const sourceDbPath = path.join(__dirname, 'books.db');
+  const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+  if (isServerless) {
+    const tmpDbPath = path.join('/tmp', 'books.db');
+    try {
+      if (!fs.existsSync(tmpDbPath) && fs.existsSync(sourceDbPath)) {
+        fs.copyFileSync(sourceDbPath, tmpDbPath);
+      }
+      return tmpDbPath;
+    } catch (e) {
+      console.warn('Could not copy to /tmp, falling back to source path:', e.message);
+      return sourceDbPath;
+    }
+  }
+  return sourceDbPath;
+};
+
+let db = null;
+let dbPromise = null;
+
+const getDBInstance = async () => {
+  if (db) return db;
+  if (!dbPromise) {
+    dbPromise = (async () => {
+      const activeDbPath = getDatabasePath();
+      const dbInstance = await open({
+        filename: activeDbPath,
+        driver: sqlite3.Database,
+      });
+
+      // Ensure book table exists
+      await dbInstance.exec(`
+        CREATE TABLE IF NOT EXISTS book (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          author TEXT NOT NULL,
+          price INTEGER NOT NULL,
+          pages INTEGER NOT NULL
+        );
+      `);
+      db = dbInstance;
+      return dbInstance;
+    })();
+  }
+  return dbPromise;
+};
+
+// Middleware: Ensure database is initialized before any route executes (vital for serverless cold-starts)
+app.use(async (req, res, next) => {
+  try {
+    if (!db) {
+      await getDBInstance();
+    }
+    next();
+  } catch (err) {
+    console.error('Database connection error in middleware:', err.message);
+    res.status(500).json({ error: `Database initialization failed: ${err.message}` });
+  }
+});
+
 // Task 3: initializeDBAndServer() async function
 const initializeDBAndServer = async () => {
   try {
-    db = await open({
-      filename: dbPath,
-      driver: sqlite3.Database,
-    });
+    await getDBInstance();
 
-    // Ensure book table exists
-    await db.exec(`
-      CREATE TABLE IF NOT EXISTS book (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        author TEXT NOT NULL,
-        price INTEGER NOT NULL,
-        pages INTEGER NOT NULL
-      );
-    `);
-
-    app.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}/`);
-      console.log(`Connected to database: ${dbPath}`);
-      console.log('Available Endpoints:');
-      console.log(`  - GET    http://localhost:${PORT}/books/`);
-      console.log(`  - GET    http://localhost:${PORT}/books/:bookId/`);
-      console.log(`  - POST   http://localhost:${PORT}/books/`);
-      console.log(`  - PUT    http://localhost:${PORT}/books/:bookId/`);
-      console.log(`  - DELETE http://localhost:${PORT}/books/:bookId/`);
-    });
+    // Start HTTP server only in standard Node environment (not in Vercel serverless)
+    if (!process.env.VERCEL) {
+      app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}/`);
+        console.log(`Connected to database: ${getDatabasePath()}`);
+        console.log('Available Endpoints:');
+        console.log(`  - GET    http://localhost:${PORT}/books/`);
+        console.log(`  - GET    http://localhost:${PORT}/books/:bookId/`);
+        console.log(`  - POST   http://localhost:${PORT}/books/`);
+        console.log(`  - PUT    http://localhost:${PORT}/books/:bookId/`);
+        console.log(`  - DELETE http://localhost:${PORT}/books/:bookId/`);
+      });
+    }
   } catch (error) {
     console.error(`DB Connection Error: ${error.message}`);
-    process.exit(1);
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
   }
 };
 

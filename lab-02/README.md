@@ -10,8 +10,10 @@
 ---
 
 ## Live Link
-- **Deployment URL:** `Not applicable (Local execution / Ready for deployment on Render, Railway, or NxtWave Cloud IDE)`
-> *Note:* In cloud environments with ephemeral filesystems (such as free-tier Render or Railway without persistent disks), SQLite file modifications are reset on container restart. Postman test outputs, terminal status logs, and database verification screenshots are documented in detail below.
+- **Deployment URL:** [https://lab-02-pearl.vercel.app/](https://lab-02-pearl.vercel.app/)
+- **All Books Endpoint:** [https://lab-02-pearl.vercel.app/books/](https://lab-02-pearl.vercel.app/books/)
+- **Single Book Endpoint:** [https://lab-02-pearl.vercel.app/books/3/](https://lab-02-pearl.vercel.app/books/3/)
+> *Note:* Deployed on Vercel Serverless with SQLite persistence configured in `/tmp` storage. Postman test outputs, terminal status logs, and database verification screenshots are also documented below.
 
 ---
 
