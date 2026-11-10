@@ -4,7 +4,7 @@
 **Registration number:** 252U1R6104
 **Section:** AIML-2B
 
-**Live link:** 
+**Live link:** https://backend-development-lab-3-rz2x.onrender.com/
 
 ## Objective
 Turn the Lab 2 book routes into a REST API with search, sorting, price filtering, pagination, validation, correct status codes and debugging practice.
