@@ -1,6 +1,6 @@
 # Backend Development Fundamentals — Lab Repository
 
-**Student Name:** Kollampally Sai Nihal  
+**Student Name:** K SAI NIHAL (Kollampally Sai Nihal)  
 **Registration Number:** 252U1R6104  
 **Section:** AIML-IB  
 **Institution:** Aurora  
@@ -19,8 +19,8 @@ Each lab folder is self-contained with its own source code, dependencies manifes
 |---|---|---|---|
 | [`lab-01/`](./lab-01/) | **Node.js and Express server** | Node.js & Express.js fundamentals, routing, status codes | Completed |
 | [`lab-02/`](./lab-02/) | **SQLite database and CRUD routes** | SQLite and relational database operations | Completed |
-| `lab-03/` | *RESTful APIs & Controllers* | REST principles, URL params, query strings | Upcoming |
-| `lab-04/` | *Data Validation & Error Handling* | Schema validation, central error handling | Upcoming |
+| [`lab-03/`](./lab-03/) | **REST API, query parameters, validation** | Search, sorting, price filtering, pagination | Completed |
+| [`lab-04/`](./lab-04/) | **Registration, login and JWT** | Authentication, password hashing (bcrypt), JWT tokens | Completed |
 | `lab-05/` | *Database Connectivity* | Database integration, ORM/ODM models | Upcoming |
 | `lab-06/` | *CRUD Operations* | Full CRUD lifecycle, parameterized queries | Upcoming |
 | `lab-07/` | *Authentication & Authorization* | Passwords hashing (bcrypt), JWT sessions | Upcoming |
